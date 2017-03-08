@@ -74,7 +74,7 @@ namespace SQLHelper
 
         private string createCommand(int type)
         {
-            if (type == COMMAND)
+            if (type == COMMAND || command != null)
             {
                 return command;
             }
@@ -83,7 +83,29 @@ namespace SQLHelper
 
             if (type == SELECT)
             {
-                cmd = "select * from [" + table + "]";
+                cmd = "select ";
+                
+                if (entry == null)
+                {
+                    cmd += "*";
+                }
+                else
+                {
+                    if (entry.getCount() == 0)
+                    {
+                        cmd += "*";
+                    }
+                    else
+                    {
+                        cmd += conditions.getItem(0).getColumnName();
+                        for (int i = 1; i < conditions.getCount(); i++)
+                        {
+                            cmd += ", " + conditions.getItem(i).getColumnName();
+                        }
+                    }
+                }
+                    
+                cmd += " from [" + table + "]";
                 if (conditions != null)
                 {
                     if (conditions.getCount() != 0)

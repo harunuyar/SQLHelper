@@ -120,22 +120,11 @@ namespace SQLHelper
                 connection.Open();
                 command.CommandText = query.getCommand(SQLQuery.SELECT);
                 SqlDataReader reader = command.ExecuteReader();
-                SQLEntry aranan = query.getEntry();
                 while (reader.Read())
                 {
                     SQLEntry entry = new SQLEntry();
                     for (int i = 0; i < reader.FieldCount; i++) {
-                        if (aranan != null)
-                        {
-                            if (aranan.getItem(reader.GetName(i)) != null)
-                            {
-                                entry.add(new SQLItem(reader.GetName(i), reader.GetSqlValue(i).ToString()));
-                            }
-                        }
-                        else
-                        {
-                            entry.add(new SQLItem(reader.GetName(i), reader.GetSqlValue(i).ToString()));
-                        }
+                        entry.add(new SQLItem(reader.GetName(i), reader.GetSqlValue(i).ToString()));
                     }
                     result.add(entry);
                 }
