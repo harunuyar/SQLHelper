@@ -74,18 +74,24 @@ namespace SQLHelper
 
         private string createCommand(int type)
         {
-            string command = "";
+            if (type == COMMAND)
+            {
+                return command;
+            }
+
+            string cmd = "";
+
             if (type == SELECT)
             {
-                command = "select * from [" + table + "]";
+                cmd = "select * from [" + table + "]";
                 if (conditions != null)
                 {
                     if (conditions.getCount() != 0)
                     {
-                        command += " where " + conditions.getItem(0).ToString();
+                        cmd += " where " + conditions.getItem(0).ToString();
                         for (int i = 1; i < conditions.getCount(); i++)
                         {
-                            command += " AND " + conditions.getItem(i).ToString();
+                            cmd += " AND " + conditions.getItem(i).ToString();
                         }
                     }
                 }
@@ -94,34 +100,34 @@ namespace SQLHelper
             {
                 if (entry.getCount() != 0)
                 {
-                    command = "insert into [" + table + "](" + entry.getItem(0).getColumnName();
+                    cmd = "insert into [" + table + "](" + entry.getItem(0).getColumnName();
                     string values = "values('" + entry.getItem(0).getValue() + "'";
                     for (int i = 1; i < entry.getCount(); i++)
                     {
-                        command += ", " + entry.getItem(i).getColumnName();
+                        cmd += ", " + entry.getItem(i).getColumnName();
                         values += ", '" + entry.getItem(i).getValue() + "'";
                     }
                     values += ")";
-                    command += ") " + values;
+                    cmd += ") " + values;
                 }
             }
             else if (type == UPDATE)
             {
                 if (entry.getCount() != 0)
                 {
-                    command = "update [" + table + "] set " + entry.getItem(0).ToString();
+                    cmd = "update [" + table + "] set " + entry.getItem(0).ToString();
                     for (int i = 1; i < entry.getCount(); i++)
                     {
-                        command += ", " + entry.getItem(i).ToString();
+                        cmd += ", " + entry.getItem(i).ToString();
                     }
                     if (conditions != null)
                     {
                         if (conditions.getCount() != 0)
                         {
-                            command += " where " + conditions.getItem(0).ToString();
+                            cmd += " where " + conditions.getItem(0).ToString();
                             for (int i = 1; i < conditions.getCount(); i++)
                             {
-                                command += " AND " + conditions.getItem(i).ToString();
+                                cmd += " AND " + conditions.getItem(i).ToString();
                             }
                         }
                     }
@@ -129,21 +135,21 @@ namespace SQLHelper
             }
             else if (type == DELETE)
             {
-                command = "delete from [" + table + "]";
+                cmd = "delete from [" + table + "]";
                 if (conditions != null)
                 {
                     if (conditions.getCount() != 0)
                     {
-                        command += "where " + conditions.getItem(0).ToString();
+                        cmd += "where " + conditions.getItem(0).ToString();
                         for (int i = 1; i < conditions.getCount(); i++)
                         {
-                            command += " AND " + conditions.getItem(i).ToString();
+                            cmd += " AND " + conditions.getItem(i).ToString();
                         }
                     }
                 }
                  
             }
-            return command;
+            return cmd;
         }
     }
 }
