@@ -48,7 +48,7 @@ while (result.hasNext())
 {
   SQLEntry en = result.next();
   for (int i=0; i<en.getCount(); i++)
-    en.getValue(i);
+    Console.WriteLine(en.getValue(i));
 }
 ```
 
