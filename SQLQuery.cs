@@ -36,8 +36,7 @@ namespace SQLHelper
 
         public string getCommand(int type)
         {
-            createCommand(type);
-            return command;
+            return createCommand(type);
         }
 
         public string getCommand()
@@ -45,8 +44,37 @@ namespace SQLHelper
             return command;
         }
 
-        private void createCommand(int type)
+        public SQLQuery addCondition(SQLEntry sqlConditions)
         {
+            conditions = sqlConditions;
+            return this;
+        }
+
+        public SQLQuery addEntry(SQLEntry sqlEntry)
+        {
+            entry = sqlEntry;
+            return this;
+        }
+
+        public SQLQuery addCommand(string command)
+        {
+            this.command = command;
+            return this;
+        }
+
+        public SQLEntry getEntry()
+        {
+            return entry;
+        }
+
+        public SQLEntry getConditions()
+        {
+            return conditions;
+        }
+
+        private string createCommand(int type)
+        {
+            string command = "";
             if (type == SELECT)
             {
                 command = "select * from [" + table + "]";
@@ -54,10 +82,10 @@ namespace SQLHelper
                 {
                     if (conditions.getCount() != 0)
                     {
-                        command += " where " + conditions.getItem(0).getColumnName() + "='" + conditions.getItem(0).getValue() + "'";
+                        command += " where " + conditions.getItem(0).ToString();
                         for (int i = 1; i < conditions.getCount(); i++)
                         {
-                            command += " AND " + conditions.getItem(i).getColumnName() + "='" + conditions.getItem(i).getValue() + "'";
+                            command += " AND " + conditions.getItem(i).ToString();
                         }
                     }
                 }
@@ -81,19 +109,19 @@ namespace SQLHelper
             {
                 if (entry.getCount() != 0)
                 {
-                    command = "update [" + table + "] set " + entry.getItem(0).getColumnName() + "='" + entry.getItem(0).getValue() + "'";
+                    command = "update [" + table + "] set " + entry.getItem(0).ToString();
                     for (int i = 1; i < entry.getCount(); i++)
                     {
-                        command += ", " + entry.getItem(i).getColumnName() + "='" + entry.getItem(i).getValue() + "'";
+                        command += ", " + entry.getItem(i).ToString();
                     }
                     if (conditions != null)
                     {
                         if (conditions.getCount() != 0)
                         {
-                            command += " where " + conditions.getItem(0).getColumnName() + "='" + conditions.getItem(0).getValue() + "'";
+                            command += " where " + conditions.getItem(0).ToString();
                             for (int i = 1; i < conditions.getCount(); i++)
                             {
-                                command += " AND " + conditions.getItem(i).getColumnName() + "='" + conditions.getItem(i).getValue() + "'";
+                                command += " AND " + conditions.getItem(i).ToString();
                             }
                         }
                     }
@@ -106,15 +134,16 @@ namespace SQLHelper
                 {
                     if (conditions.getCount() != 0)
                     {
-                        command += "where " + conditions.getItem(0).getColumnName() + " = '" + conditions.getItem(0).getValue() + "'";
+                        command += "where " + conditions.getItem(0).ToString();
                         for (int i = 1; i < conditions.getCount(); i++)
                         {
-                            command += " AND " + conditions.getItem(i).getColumnName() + "='" + conditions.getItem(i).getValue() + "'";
+                            command += " AND " + conditions.getItem(i).ToString();
                         }
                     }
                 }
                  
             }
+            return command;
         }
     }
 }

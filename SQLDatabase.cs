@@ -29,6 +29,18 @@ namespace SQLHelper
             connected = true;
         }
 
+        public bool isConnected()
+        {
+            return connected;
+        }
+
+        public void connect(string connectionString)
+        {
+            connected = false;
+            Task task = new Task(new Action(() => initialize(connectionString)));
+            task.Start();
+        }
+
         public bool execute(string komutString)
         {
             if (!connected)
@@ -108,11 +120,22 @@ namespace SQLHelper
                 connection.Open();
                 command.CommandText = query.getCommand(SQLQuery.SELECT);
                 SqlDataReader reader = command.ExecuteReader();
+                SQLEntry aranan = query.getEntry();
                 while (reader.Read())
                 {
                     SQLEntry entry = new SQLEntry();
                     for (int i = 0; i < reader.FieldCount; i++) {
-                        entry.add(new SQLItem(reader.GetName(i), reader.GetSqlValue(i).ToString()));
+                        if (aranan != null)
+                        {
+                            if (aranan.getItem(reader.GetName(i)) != null)
+                            {
+                                entry.add(new SQLItem(reader.GetName(i), reader.GetSqlValue(i).ToString()));
+                            }
+                        }
+                        else
+                        {
+                            entry.add(new SQLItem(reader.GetName(i), reader.GetSqlValue(i).ToString()));
+                        }
                     }
                     result.add(entry);
                 }

@@ -17,9 +17,67 @@ namespace SQLHelper
             index = 0;
         }
 
+        public SQLResult(SQLResult r)
+        {
+            entries = new List<SQLEntry>(r.asList());
+            index = 0;
+        }
+
+        public SQLResult(List<SQLEntry> list)
+        {
+            entries = new List<SQLEntry>(list);
+            index = 0;
+        }
+
         public SQLResult add(SQLEntry entry)
         {
             entries.Add(entry);
+            return this;
+        }
+
+        public SQLResult add(List<SQLEntry> list)
+        {
+            entries.AddRange(list);
+            return this;
+        }
+
+        public SQLResult add(SQLResult r)
+        {
+            entries.AddRange(r.asList());
+            return this;
+        }
+
+        public SQLResult addIfNotExists(SQLEntry entry)
+        {
+            if (!entries.Contains<SQLEntry>(entry))
+            {
+                entries.Add(entry);
+            }
+            return this;
+        }
+
+        public SQLResult addIfNotExists(SQLResult r)
+        {
+            List<SQLEntry> list = r.asList();
+            foreach (SQLEntry e in list)
+            {
+                if (!entries.Contains<SQLEntry>(e))
+                {
+                    entries.Add(e);
+                }
+            }
+            return this;
+        }
+
+        public SQLResult addIfNotExists(List<SQLEntry> list)
+        {
+            foreach (SQLEntry e in list)
+            {
+                if (!entries.Contains<SQLEntry>(e))
+                {
+                    entries.Add(e);
+                }
+            }
             return this;
         }
 
@@ -51,6 +109,18 @@ namespace SQLHelper
         public bool isEmpty()
         {
             return entries.Count == 0;
+        }
+
+        public List<SQLEntry> asList()
+        {
+            return entries;
+        }
+
+        public static SQLResult combine(SQLResult r1, SQLResult r2)
+        {
+            SQLResult result = new SQLResult(r1);
+            result.addIfNotExists(r2);
+            return result;
         }
     }
 }
